@@ -672,7 +672,13 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxyJbqWZbnAPqN6ibtiD
 const TOTAL_QUESTIONS = 120;
 const EXAM_DURATION_MINUTES = 120;
 const STORAGE_KEY = 'azad_exam_questions_cache_v1';
-
+// ↓ add the function + call here
+function clearQuestionCache() {
+  try {
+    localStorage.removeItem(STORAGE_KEY);
+  } catch (e) {}
+}
+clearQuestionCache();
 // ── STATE ─────────────────────────────────────────────────────────────────────
 let state = {
   phone: '',
