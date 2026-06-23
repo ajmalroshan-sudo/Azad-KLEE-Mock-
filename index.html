@@ -546,9 +546,8 @@
             <label class="field-label">Date of Birth</label>
             <div class="input-wrap" id="dob-wrap">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 6c1.1 0 2-.9 2-2 0-.55-.22-1.05-.59-1.41L12 1l-1.41 1.59C10.22 2.95 10 3.45 10 4c0 1.1.9 2 2 2zm4.6 1.99c-.16-.46-.66-.7-1.18-.55C13.7 7.8 12.86 8 12 8c-.86 0-1.7-.2-2.42-.56-.52-.15-1.02.09-1.18.55L4.5 19.4c-.13.39.05.82.42 1.02.16.09.34.13.51.13.31 0 .61-.15.79-.43L9 14h6l2.78 6.12c.18.28.48.43.79.43.17 0 .35-.04.51-.13.37-.2.55-.63.42-1.02L16.6 7.99z" fill="currentColor"/></svg>
-              <input type="text" id="dob-input" placeholder="DD/MM/YYYY" readonly>
+              <input type="text" id="dob-input" placeholder="DD/MM/YYYY" inputmode="numeric" maxlength="10">
             </div>
-            <input type="date" id="dob-native" style="position:absolute; opacity:0; pointer-events:none;">
             <div class="field-error" id="dob-error">Date of Birth is required</div>
           </div>
 
@@ -710,26 +709,22 @@ function showScreen(name) {
 
 const phoneInput = $('phone-input');
 const dobInput = $('dob-input');
-const dobNative = $('dob-native');
+// const dobNative = $('dob-native');
 
 // Restrict phone input to digits only
 phoneInput.addEventListener('input', () => {
   phoneInput.value = phoneInput.value.replace(/\D/g, '').slice(0, 10);
 });
 
-// Tapping the DOB field opens the native date picker (works well on mobile)
-dobInput.addEventListener('click', () => {
-  if (dobNative.showPicker) {
-    try { dobNative.showPicker(); } catch (e) { dobNative.click(); }
-  } else {
-    dobNative.click();
+dobInput.addEventListener('input', () => {
+  let digits = dobInput.value.replace(/\D/g, '').slice(0, 8);
+  let formatted = digits;
+  if (digits.length > 4) {
+    formatted = `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4)}`;
+  } else if (digits.length > 2) {
+    formatted = `${digits.slice(0, 2)}/${digits.slice(2)}`;
   }
-});
-dobNative.addEventListener('change', () => {
-  if (dobNative.value) {
-    const [y, m, d] = dobNative.value.split('-');
-    dobInput.value = `${d}/${m}/${y}`;
-  }
+  dobInput.value = formatted;
 });
 
 function showLoginAlert(message, isInfo) {
